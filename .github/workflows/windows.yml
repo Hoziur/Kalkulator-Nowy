@@ -2,12 +2,13 @@ name: Windows EXE build
 
 on:
   push:
-    branches: [ main ]      # jeśli masz inną gałąź niż 'main' — wpisz tu jej nazwę
+    branches: [ main ]      # jeśli Twoja główna gałąź to np. "master", zmień tu
   workflow_dispatch:        # pozwala uruchomić ręcznie
 
 jobs:
   build-windows:
     runs-on: windows-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
