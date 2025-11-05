@@ -2,7 +2,7 @@ name: Windows EXE build
 
 on:
   push:
-    branches: [ main ]      # jeśli Twoja gałąź to "master", zmień tu
+    branches: [ main ]    # jeśli masz inną gałąź, zmień tutaj
   workflow_dispatch:
 
 jobs:
@@ -16,8 +16,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 20      # <— UWAGA: bez cache
 
       - name: Show Node & NPM versions
         run: |
@@ -25,17 +24,15 @@ jobs:
           npm -v
 
       - name: Install dependencies
-        run: npm install
+        run: npm install --no-audit --no-fund
 
-      # 1) Zbuduj front (Vite) -> dist/
-      - name: Build web
+      - name: Build web (Vite)
         run: npm run build
 
       - name: List dist after web build
         run: dir dist
         shell: cmd
 
-      # 2) Zbuduj instalator Windows (.exe) przez electron-builder
       - name: Build Windows installer (electron-builder)
         run: npx electron-builder --win nsis --config.electronVersion=30.0.0
 
@@ -43,7 +40,6 @@ jobs:
         run: dir dist
         shell: cmd
 
-      # 3) Upload gotowych plików
       - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
