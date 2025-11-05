@@ -65,4 +65,30 @@
     "@vitejs/plugin-react": "^4.2.0",
     "wait-on": "^7.2.0"
   }
+  ,
+"build": {
+  "appId": "pl.arvore.kalkulatorwyceny",
+  "productName": "Kalkulator Wyceny Kuchni",
+  "files": [
+    "dist/**",
+    "electron/**",
+    "package.json"
+  ],
+  "directories": {
+    "buildResources": "build"
+  },
+  "win": {
+    "target": [
+      { "target": "nsis", "arch": ["x64"] }
+    ],
+    "artifactName": "Kalkulator-Wyceny-Kuchni-Setup-${version}.exe"
+  },
+  "nsis": {
+    "oneClick": true,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": false,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  }
+}
 }
