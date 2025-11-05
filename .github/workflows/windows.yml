@@ -2,8 +2,8 @@ name: Windows EXE build
 
 on:
   push:
-    branches: [ main ]      # jeśli Twoja główna gałąź to np. "master", zmień tu
-  workflow_dispatch:        # pozwala uruchomić ręcznie
+    branches: [ main ]      # jeśli Twoja gałąź to "master", zmień tu
+  workflow_dispatch:
 
 jobs:
   build-windows:
@@ -17,20 +17,38 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
+
+      - name: Show Node & NPM versions
+        run: |
+          node -v
+          npm -v
 
       - name: Install dependencies
         run: npm install
 
+      # 1) Zbuduj front (Vite) -> dist/
       - name: Build web
         run: npm run build
 
-      - name: Build Windows installer
-        run: npx electron-builder --win nsis
+      - name: List dist after web build
+        run: dir dist
+        shell: cmd
 
-      - name: Upload artifact
+      # 2) Zbuduj instalator Windows (.exe) przez electron-builder
+      - name: Build Windows installer (electron-builder)
+        run: npx electron-builder --win nsis --config.electronVersion=30.0.0
+
+      - name: List dist after electron-builder
+        run: dir dist
+        shell: cmd
+
+      # 3) Upload gotowych plików
+      - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: Kalkulator-Windows-Installer
           path: |
             dist/*.exe
             dist/*.msi
+            dist/win-*/**/*
